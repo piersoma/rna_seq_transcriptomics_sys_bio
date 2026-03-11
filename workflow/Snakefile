@@ -1,0 +1,21 @@
+configfile: "config/config.yaml"
+
+include: "rules/preprocess.smk"
+include: "rules/alignment.smk"
+include: "rules/count.smk"
+include: "rules/multiqc.smk"
+include: "rules/deg.smk"
+
+rule all:
+    input:
+        # targets
+        expand("results/fastqc/{sample}_{stage}_fastqc.html",
+               sample=config["samples"], stage=["raw","filtered"]),
+        expand("results/fastp/{sample}_fastp.html",
+               sample=config["samples"]),
+        expand("results/hisat2/{sample}.sorted.bam.bai",
+               sample=config["samples"]),
+        expand("results/counts/{sample}.featureCounts.txt",
+               sample=config["samples"]),
+        "results/multiqc/multiqc_report.html",
+        "results/DEG/DEG_report.html"
